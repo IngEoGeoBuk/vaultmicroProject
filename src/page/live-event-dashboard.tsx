@@ -15,45 +15,88 @@ export function LiveEventDashboard() {
     
     const [scheduledEvent, setScheduledEvent] = useState<LiveEvent[]>([]);
     const [scheduledProducts, setScheduledProducts] = useState<Product[][]>([]);
+    const [scheduledItem, setScheduledItem] = useState<ScheduledEventCardProps[]>([])
 
     const [liveEvent, setLiveEvent] = useState<LiveEvent[]>([]);
     const [liveProducts, setLiveProducts] = useState<Product[][]>([]);
+    const [liveItem, setLiveItem] = useState<LiveEventCardProps[]>([])
 
     const [finishedEvent, setFinishedEvent] = useState<LiveEvent[]>([]);
     const [finishedProducts, setFinishedProducts] = useState<Product[][]>([]);
+    const [finishedItem, setFinishedItem] = useState<FinishedEventCardProps[]>([])
+
     const history = useHistory();
 
-    const onDeleteAction = (id: string) => {
-        Axios.delete(`${baseUrl}/live-event/${id}`)
-        .then(() => {
-            setScheduledEvent(scheduledEvent.filter((val: LiveEvent) => {
-                return val.id !== id;
-            }))
-            setLiveEvent(liveEvent.filter((val: LiveEvent) => {
-                return val.id !== id;
-            }))
-            setFinishedEvent(finishedEvent.filter((val: LiveEvent) => {
-                return val.id !== id;
-            }))
-        }).catch((err) => {
-            console.log(err)
-        })
-    }
+    const sampleScheduledEventCardProps: ScheduledEventCardProps[] = scheduledProducts.map((item: Product[], key: number) => ({
+        event: scheduledEvent[key],
+        products: item,
+        onDeleteAction: (id: string) => {
+            Axios.delete(`${baseUrl}/live-event/${id}`)
+            .then(() => {
+                // setScheduledItem(scheduledItem.filter((val: ScheduledEventCardProps) => {
+                //     return val.event.id !== id;
+                // }))
+                window.location.replace("/live-event/list")
+            }).catch((err) => {
+                console.log(err)
+            })
+        },
+        onLiveEventAction: (id: string) => {
+            Axios.patch(`${baseUrl}/live-event/${id}`, {
+                status: LiveStatus.LIVE 
+            })
+            .then(() => {
+                window.location.replace("/live-event/list")
+            }).catch((err) => {
+                console.log(err)
+            })
+        },
+    }))
 
-    const onLiveEventAction = (id: string) => {
-        Axios.patch(`${baseUrl}/live-event/${id}`, {
-            status: LiveStatus.LIVE 
-        })
-    }
+    const sampleLiveEventCardProps: LiveEventCardProps[] = liveProducts.map((item: Product[], key: number) => ({
+        event: liveEvent[key],
+        products: item,
+        onDeleteAction: (id: string) => {
+            Axios.delete(`${baseUrl}/live-event/${id}`)
+            .then(() => {
+                // setLiveItem(liveItem.filter((val: LiveEventCardProps) => {
+                //     return val.event.id !== id;
+                // }))
+                window.location.replace("/live-event/list")
+            }).catch((err) => {
+                console.log(err)
+            })
+        },
+        onFinishedEventAction: (id: string) => {
+            Axios.patch(`${baseUrl}/live-event/${id}`, {
+                status: LiveStatus.FINISHED 
+            })
+            .then(() => {
+                window.location.replace("/live-event/list")
+            }).catch((err) => {
+                console.log(err)
+            })
+        },
+    }))
 
-    const onFinishedEventAction = (id: string) => {
-        Axios.patch(`${baseUrl}/live-event/${id}`, {
-            status: LiveStatus.FINISHED 
-        })
-    }  
-
+    const sampleFinishedEventCardProps: FinishedEventCardProps[] = finishedProducts.map((item: Product[], key: number) => ({
+        event: finishedEvent[key],
+        products: item,
+        onDeleteAction: (id: string) => {
+            Axios.delete(`${baseUrl}/live-event/${id}`)
+            .then(() => {
+                // setFinishedItem(finishedItem.filter((val: FinishedEventCardProps) => {
+                //     return val.event.id !== id;
+                // }))
+                window.location.replace("/live-event/list")
+            }).catch((err) => {
+                console.log(err)
+            })
+        },
+    }))
 
     useEffect(() => {
+        
         Axios.get(`${baseUrl}/live-event`)
         .then((res) => {
             res.data.liveEvents.map((val: LiveEvent) => {
@@ -101,47 +144,38 @@ export function LiveEventDashboard() {
             <Layout>
                 <Layout.Section oneThird>
                     <Heading>방송 대기중인 이벤트</Heading>
-                    {scheduledEvent != null && 
-                    scheduledProducts != null && 
-                    scheduledProducts.length != 0 && 
-                    scheduledProducts.map((val: Product[], key: number) => {
+                    {sampleScheduledEventCardProps.map((val: ScheduledEventCardProps, key: number) => {
                         return (
                             <ScheduledEventCard 
-                                event={scheduledEvent[key]}
-                                products={val}
-                                onDeleteAction={onDeleteAction}
-                                onLiveEventAction={onLiveEventAction}
+                                event={val.event}
+                                products={val.products}
+                                onDeleteAction={val.onDeleteAction}
+                                onLiveEventAction={val.onLiveEventAction}
                             />
                         )
                     })}
                 </Layout.Section>
                 <Layout.Section oneThird>
                     <Heading>방송 중인 이벤트</Heading>
-                    {liveEvent != null && 
-                    liveProducts != null && 
-                    liveProducts.length != 0 && 
-                    liveProducts.map((val: Product[], key: number) => {
+                    {sampleLiveEventCardProps.map((val: LiveEventCardProps, key: number) => {
                         return (
                             <LiveEventCard 
-                                event={liveEvent[key]}
-                                products={val}
-                                onDeleteAction={onDeleteAction}
-                                onFinishedEventAction={onFinishedEventAction}
+                                event={val.event}
+                                products={val.products}
+                                onDeleteAction={val.onDeleteAction}
+                                onFinishedEventAction={val.onFinishedEventAction}
                             />
                         )
                     })}
                 </Layout.Section>
                 <Layout.Section oneThird>
                     <Heading>방송 종료된 이벤트</Heading>
-                    {finishedEvent != null && 
-                    finishedProducts != null && 
-                    finishedProducts.length != 0 && 
-                    finishedProducts.map((val: Product[], key: number) => {
+                    {sampleFinishedEventCardProps.map((val: FinishedEventCardProps, key: number) => {
                         return (
                             <FinishedEventCard 
-                                event={finishedEvent[key]}
-                                products={val}
-                                onDeleteAction={onDeleteAction}
+                                event={val.event}
+                                products={val.products}
+                                onDeleteAction={val.onDeleteAction}
                             />
                         )
                     })}
