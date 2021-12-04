@@ -15,15 +15,12 @@ export function LiveEventDashboard() {
     
     const [scheduledEvent, setScheduledEvent] = useState<LiveEvent[]>([]);
     const [scheduledProducts, setScheduledProducts] = useState<Product[][]>([]);
-    const [scheduledItem, setScheduledItem] = useState<ScheduledEventCardProps[]>([])
 
     const [liveEvent, setLiveEvent] = useState<LiveEvent[]>([]);
     const [liveProducts, setLiveProducts] = useState<Product[][]>([]);
-    const [liveItem, setLiveItem] = useState<LiveEventCardProps[]>([])
 
     const [finishedEvent, setFinishedEvent] = useState<LiveEvent[]>([]);
     const [finishedProducts, setFinishedProducts] = useState<Product[][]>([]);
-    const [finishedItem, setFinishedItem] = useState<FinishedEventCardProps[]>([])
 
     const history = useHistory();
 
@@ -33,9 +30,6 @@ export function LiveEventDashboard() {
         onDeleteAction: (id: string) => {
             Axios.delete(`${baseUrl}/live-event/${id}`)
             .then(() => {
-                // setScheduledItem(scheduledItem.filter((val: ScheduledEventCardProps) => {
-                //     return val.event.id !== id;
-                // }))
                 window.location.replace("/live-event/list")
             }).catch((err) => {
                 console.log(err)
@@ -59,9 +53,6 @@ export function LiveEventDashboard() {
         onDeleteAction: (id: string) => {
             Axios.delete(`${baseUrl}/live-event/${id}`)
             .then(() => {
-                // setLiveItem(liveItem.filter((val: LiveEventCardProps) => {
-                //     return val.event.id !== id;
-                // }))
                 window.location.replace("/live-event/list")
             }).catch((err) => {
                 console.log(err)
@@ -85,9 +76,6 @@ export function LiveEventDashboard() {
         onDeleteAction: (id: string) => {
             Axios.delete(`${baseUrl}/live-event/${id}`)
             .then(() => {
-                // setFinishedItem(finishedItem.filter((val: FinishedEventCardProps) => {
-                //     return val.event.id !== id;
-                // }))
                 window.location.replace("/live-event/list")
             }).catch((err) => {
                 console.log(err)
@@ -96,7 +84,6 @@ export function LiveEventDashboard() {
     }))
 
     useEffect(() => {
-        
         Axios.get(`${baseUrl}/live-event`)
         .then((res) => {
             res.data.liveEvents.map((val: LiveEvent) => {
