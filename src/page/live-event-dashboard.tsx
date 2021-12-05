@@ -28,9 +28,20 @@ export function LiveEventDashboard() {
         event: scheduledEvent[key],
         products: item,
         onDeleteAction: (id: string) => {
+            let targetKey: number = 0
+            scheduledEvent.map((val: LiveEvent, key: number) => {
+                if (val.id === id) {
+                    targetKey = key
+                } 
+            })
             Axios.delete(`${baseUrl}/live-event/${id}`)
             .then(() => {
-                window.location.replace("/live-event/list")
+                setScheduledProducts(scheduledProducts.filter((val: Product[], key: number) => {
+                    return key !== targetKey;
+                }))
+                setScheduledEvent(scheduledEvent.filter((val: LiveEvent, key: number) => {
+                    return key !== targetKey;
+                }))
             }).catch((err) => {
                 console.log(err)
             })
@@ -51,9 +62,20 @@ export function LiveEventDashboard() {
         event: liveEvent[key],
         products: item,
         onDeleteAction: (id: string) => {
+            let targetKey: number = 0
+            liveEvent.map((val: LiveEvent, key: number) => {
+                if (val.id === id) {
+                    targetKey = key
+                } 
+            })
             Axios.delete(`${baseUrl}/live-event/${id}`)
             .then(() => {
-                window.location.replace("/live-event/list")
+                setLiveProducts(liveProducts.filter((val: Product[], key: number) => {
+                    return key !== targetKey;
+                }))
+                setLiveEvent(liveEvent.filter((val: LiveEvent, key: number) => {
+                    return key !== targetKey;
+                }))
             }).catch((err) => {
                 console.log(err)
             })
@@ -74,9 +96,20 @@ export function LiveEventDashboard() {
         event: finishedEvent[key],
         products: item,
         onDeleteAction: (id: string) => {
+            let targetKey: number = 0
+            finishedEvent.map((val: LiveEvent, key: number) => {
+                if (val.id === id) {
+                    targetKey = key
+                } 
+            })
             Axios.delete(`${baseUrl}/live-event/${id}`)
             .then(() => {
-                window.location.replace("/live-event/list")
+                setFinishedProducts(finishedProducts.filter((val: Product[], key: number) => {
+                    return key !== targetKey;
+                }))
+                setFinishedEvent(finishedEvent.filter((val: LiveEvent, key: number) => {
+                    return key !== targetKey;
+                }))
             }).catch((err) => {
                 console.log(err)
             })
