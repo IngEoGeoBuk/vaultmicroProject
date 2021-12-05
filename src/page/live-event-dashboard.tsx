@@ -47,11 +47,24 @@ export function LiveEventDashboard() {
             })
         },
         onLiveEventAction: (id: string) => {
+            let targetKey: number = 0
+            scheduledEvent.map((val: LiveEvent, key: number) => {
+                if (val.id === id) {
+                    targetKey = key
+                } 
+            })
             Axios.patch(`${baseUrl}/live-event/${id}`, {
                 status: LiveStatus.LIVE 
             })
             .then(() => {
-                window.location.replace("/live-event/list")
+                setLiveEvent(liveEvent => [...liveEvent, scheduledEvent[targetKey]])
+                setLiveProducts(liveProducts => [...liveProducts, scheduledProducts[targetKey]])
+                setScheduledProducts(scheduledProducts.filter((val: Product[], key: number) => {
+                    return key !== targetKey;
+                }))
+                setScheduledEvent(scheduledEvent.filter((val: LiveEvent, key: number) => {
+                    return key !== targetKey;
+                }))
             }).catch((err) => {
                 console.log(err)
             })
@@ -81,11 +94,24 @@ export function LiveEventDashboard() {
             })
         },
         onFinishedEventAction: (id: string) => {
+            let targetKey: number = 0
+            liveEvent.map((val: LiveEvent, key: number) => {
+                if (val.id === id) {
+                    targetKey = key
+                } 
+            })
             Axios.patch(`${baseUrl}/live-event/${id}`, {
                 status: LiveStatus.FINISHED 
             })
             .then(() => {
-                window.location.replace("/live-event/list")
+                setFinishedEvent(finishedEvent => [...finishedEvent, liveEvent[targetKey]])
+                setFinishedProducts(finishedProducts => [...finishedProducts, liveProducts[targetKey]])
+                setLiveProducts(liveProducts.filter((val: Product[], key: number) => {
+                    return key !== targetKey;
+                }))
+                setLiveEvent(liveEvent.filter((val: LiveEvent, key: number) => {
+                    return key !== targetKey;
+                }))
             }).catch((err) => {
                 console.log(err)
             })
